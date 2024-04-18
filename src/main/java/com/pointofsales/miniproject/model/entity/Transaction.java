@@ -20,7 +20,6 @@ public class Transaction {
     @Column(name = "id", nullable = false)
     private int id;
     @Column(name = "transaction_date")
-    @GeneratedValue
     private Date transactionDate;
     @Column(name = "total_amount", nullable = false)
     private int totalAmount;
