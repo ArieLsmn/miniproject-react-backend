@@ -1,13 +1,16 @@
 package com.pointofsales.miniproject.controller;
 
+import com.pointofsales.miniproject.model.dto.ProductDto;
 import com.pointofsales.miniproject.model.entity.Product;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("pos/api")
@@ -39,7 +42,6 @@ public class ProductController {
     @GetMapping(value="/listproduct",params = {"category_id"})
     @ResponseBody
     List<Product> listByCategory(@RequestParam(name = "category_id") int cat){
-
         return prodService.listProductByCategory(cat);
     }
 
@@ -62,7 +64,8 @@ public class ProductController {
         else return new ResponseMessage(HttpStatus.NOT_FOUND, "Data not found");
 
     }
-    @PutMapping("/deleteproduct/{id}")
+
+    @DeleteMapping("/deleteproduct/{id}")
     @ResponseBody
     ResponseMessage deleteProduct(@PathVariable("id") int id){
         boolean check=prodService.deleteProduct(id);
@@ -72,5 +75,16 @@ public class ProductController {
         else return new ResponseMessage(HttpStatus.NOT_FOUND, "Data not found");
 
     }
+    @GetMapping("/detailproduct/{id}")
+    @ResponseBody
+    ResponseEntity<ProductDto> detailProduct(@PathVariable("id") int id){
+        ProductDto p = new Product().entityToDto();
+        try {
+            p = prodService.detailProduct(id).entityToDto();
 
+        }catch (NullPointerException e){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(p);
+    }
 }

@@ -57,9 +57,21 @@ public class ProductService {
 
         return prodRepo.findByCategoryId(cat);
     }
+
+
+    public Product detailProduct(int id) {
+        Optional<Product> optional = prodRepo.findById(id);
+        if (optional.isEmpty()) {
+            return null;
+        }
+        else
+            return prodRepo.findById(id).get();
+    }
+
     public void insertProduct(Product p) {
         prodRepo.save(p);
     }
+
 
     public boolean updateProduct(int id,Product p){
         Optional<Product> optional = prodRepo.findById(id);
@@ -86,6 +98,7 @@ public class ProductService {
         }
 
     }
+
 
 
 

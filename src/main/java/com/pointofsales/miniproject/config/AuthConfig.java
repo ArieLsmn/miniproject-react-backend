@@ -23,7 +23,7 @@ public class AuthConfig {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return username-> userRepo.findByUsername(username).orElseThrow(); //tambah orelesethrow
+        return username-> userRepo.findByUsername(username).orElseThrow();
     }
 
     @Bean

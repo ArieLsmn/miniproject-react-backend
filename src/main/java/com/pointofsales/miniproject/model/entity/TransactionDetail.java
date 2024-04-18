@@ -1,10 +1,7 @@
 package com.pointofsales.miniproject.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "TransactionDetail")
 @Table(name = "transaction_details", schema = "public")
 public class TransactionDetail {

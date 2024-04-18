@@ -1,6 +1,6 @@
 package com.pointofsales.miniproject.config;
 
-import com.example.gen20javaspringbootpos.service.JwtService;
+import com.pointofsales.miniproject.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
