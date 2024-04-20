@@ -8,8 +8,10 @@ import com.pointofsales.miniproject.repository.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -38,15 +40,17 @@ public class TransactionService {
 
         //List<Integer> ids = new ArrayList<Integer>();
         //ids.add(id);
-        Transaction tr = tranRepo.findById(id).get();
-        List<TransactionDetail> det = tr.getTransactionDetail();
-    return det;//detRepo.findAllById(det);
+        Transaction tr = new Transaction();
+        Optional<Transaction> opTr = tranRepo.findById(id);
+        return opTr.map(Transaction::getTransactionDetail).orElse(null);
+    //detRepo.findAllById(det);
 
     }
 
     public boolean addTransaction(Transaction tr){
         List<TransactionDetail> trdet = tr.getTransactionDetail();
         tr.setTransactionDetail(null);
+        tr.setTransactionDate(LocalDateTime.now());
         tranRepo.save(tr);
         int id=tranRepo.getMaxId();
         for (TransactionDetail det: trdet) {

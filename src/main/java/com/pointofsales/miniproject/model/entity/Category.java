@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "categories", schema = "public")
 public class Category {
-    @Id
 
+    @Id
     private int id;
     private String name;
 }

@@ -1,5 +1,6 @@
 package com.pointofsales.miniproject.service;
 
+import com.pointofsales.miniproject.model.dto.ProductDto;
 import com.pointofsales.miniproject.model.entity.Category;
 import com.pointofsales.miniproject.model.entity.Product;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
@@ -79,14 +80,13 @@ public class ProductService {
     }
 
 
-    public boolean updateProduct(int id,Product p){
+    public boolean updateProduct(int id, ProductDto p){
         Optional<Product> optional = prodRepo.findById(id);
-        if (optional.isEmpty()) {
-            return false;
-        }
+        if (optional.isEmpty()) return false;
+
         //Category categories = catRepo.findById(p.getCategoryId()).orElse(null);
 
-        Product product = p;
+        Product product = p.dtoToEntity();
         product.setId(id);
         prodRepo.save(product);
         return true;

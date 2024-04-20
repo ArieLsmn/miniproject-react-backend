@@ -18,7 +18,7 @@ public class ProductDto {
     private int price;
     //private Category category;
     private int categoryId;
-    //private String categoryName;
+    private String categoryName;
 
     public Product dtoToEntity(){
 
@@ -28,8 +28,7 @@ public class ProductDto {
         p.setImage(this.image);
         p.setPrice(this.price);
 
-        Category cat = new Category();
-        cat.setId(this.categoryId);
+        Category cat = new Category(this.categoryId,categoryName);
 
         p.setCategory(cat);
 

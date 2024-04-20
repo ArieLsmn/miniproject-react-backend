@@ -7,6 +7,7 @@ import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import com.pointofsales.miniproject.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -35,9 +36,13 @@ public class TransactionController {
     }
 
     @GetMapping("/listtransactiondetail/{id}")
-    List<TransactionDetail> listTransactionDetail(@PathVariable("id") int id){
+    ResponseEntity<Object> listTransactionDetail(@PathVariable("id") String id){
 
-        return tranServ.listTransactionDetail(id);
+        if(!id.matches("^[0-9]+$"))
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+
+        else
+        return ResponseEntity.status(HttpStatus.OK).body(tranServ.listTransactionDetail(Integer.parseInt(id)));
 
     }
 

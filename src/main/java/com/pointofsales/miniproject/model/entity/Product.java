@@ -33,7 +33,7 @@ public class Product implements Serializable {
     private String image;
 
     public ProductDto entityToDto(){
-        return new ProductDto(this.title,this.image,this.price,this.category.getId());
+        return new ProductDto(this.title,this.image,this.price,this.category.getId(),this.category.getName());
     }
 
 }

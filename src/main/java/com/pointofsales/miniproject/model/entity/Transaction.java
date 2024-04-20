@@ -33,7 +33,7 @@ public class Transaction {
     private List<TransactionDetail> transactionDetail;
 
     public TransactionOnlyDto entityToDto(){
-        return new TransactionOnlyDto(this.totalAmount, this.totalPay, this.transactionDate);
+        return new TransactionOnlyDto(this.totalAmount, this.totalPay, this.transactionDate.toLocalDate());
     }
 
 

@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class TransactionOnlyDto {
 
     private int totalPay;
 
-    private LocalDateTime transactionDate;
+    private LocalDate transactionDate;
 
 
     /*Transaction dtoToEntity(){

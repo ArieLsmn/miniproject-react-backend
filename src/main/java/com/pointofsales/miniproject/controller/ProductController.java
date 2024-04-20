@@ -1,6 +1,7 @@
 package com.pointofsales.miniproject.controller;
 
 import com.pointofsales.miniproject.model.dto.ProductDto;
+import com.pointofsales.miniproject.model.entity.Category;
 import com.pointofsales.miniproject.model.entity.Product;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.service.ProductService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
 @RequestMapping("pos/api")
@@ -50,7 +52,7 @@ public class ProductController {
             }
         }else{
 
-            if(!cat.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
+            if(!cat.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
             pr = prodService.listProductByCategory(Integer.parseInt(cat));
         }
 
@@ -83,10 +85,12 @@ public class ProductController {
 
     @PutMapping("/updateproduct/{id}")
     @ResponseBody
-    ResponseMessage updateProduct(@PathVariable("id") int id, @RequestBody Product pr){
-        boolean check=prodService.updateProduct(id,pr);
-        if(check)
-        return new ResponseMessage(HttpStatus.OK,"Success");
+    ResponseMessage updateProduct(@PathVariable("id") String id, @RequestBody ProductDto pr){
+        if (!id.matches("^[0-9]+$")) return new ResponseMessage(HttpStatus.BAD_REQUEST,"Only numbers allowed");
+
+        boolean check = prodService.updateProduct(Integer.parseInt(id), pr);
+        if (check)
+            return new ResponseMessage(HttpStatus.OK, "Success");
 
         else return new ResponseMessage(HttpStatus.NOT_FOUND, "Data not found");
 
@@ -94,8 +98,9 @@ public class ProductController {
 
     @DeleteMapping("/deleteproduct/{id}")
     @ResponseBody
-    ResponseMessage deleteProduct(@PathVariable("id") int id){
-        boolean check=prodService.deleteProduct(id);
+    ResponseMessage deleteProduct(@PathVariable("id") String id){
+        if (!id.matches("^[0-9]+$")) return new ResponseMessage(HttpStatus.BAD_REQUEST,"Only numbers allowed");
+        boolean check=prodService.deleteProduct(Integer.parseInt(id));
         if(check)
         return new ResponseMessage(HttpStatus.OK,"Success");
 
@@ -104,14 +109,20 @@ public class ProductController {
     }
     @GetMapping("/detailproduct/{id}")
     @ResponseBody
-    ResponseEntity<ProductDto> detailProduct(@PathVariable("id") int id){
-        ProductDto p = new Product().entityToDto();
+    ResponseEntity<Object> detailProduct(@PathVariable("id") String id){
+
+        if (!id.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+
+        Product pr = prodService.detailProduct(Integer.parseInt(id));
+
+        ProductDto p;
         try {
-            p = prodService.detailProduct(id).entityToDto();
+            p = pr.entityToDto();
 
         }catch (NullPointerException e){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
         }
+
         return ResponseEntity.status(HttpStatus.OK).body(p);
     }
 }
