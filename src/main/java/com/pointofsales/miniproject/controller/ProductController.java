@@ -66,10 +66,10 @@ public class ProductController {
 
     @PostMapping("/addproduct")
     @ResponseBody
-    ResponseEntity<ResponseMessage> addProduct(@RequestBody Product pr){
+    ResponseEntity<ResponseMessage> addProduct(@RequestBody ProductDto pr){
         HttpStatus stt;
         ResponseMessage rm;
-        if(prodService.insertProduct(pr)) {
+        if(prodService.insertProduct(pr.dtoToEntity())) {
             stt = HttpStatus.OK;
             rm = new ResponseMessage(stt, "Success");
         }else {

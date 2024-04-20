@@ -20,7 +20,7 @@ public class ProductDto {
     private int categoryId;
     //private String categoryName;
 
-    Product dtoToEntity(){
+    public Product dtoToEntity(){
 
         Product p = new Product();
 
