@@ -1,5 +1,6 @@
 package com.pointofsales.miniproject.service;
 
+import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
 import com.pointofsales.miniproject.model.entity.Transaction;
 import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import com.pointofsales.miniproject.repository.TransactionDetailsRepo;
@@ -21,15 +22,15 @@ public class TransactionService {
 
 
 
-    public List<Transaction> listTransaction(){
-        return tranRepo.findAll();
+    public List<TransactionOnlyDto> listTransaction(){
 
-    }
+        List<Transaction> tr = tranRepo.findAll();
+        List<TransactionOnlyDto> tro = new ArrayList<TransactionOnlyDto>();
+        for (Transaction t : tr) {
+            tro.add(t.entityToDto());
+        }
 
-    public boolean addTransaction(Transaction tr){
-
-        tranRepo.save(tr);
-        return true;
+        return tro;
 
     }
 
@@ -41,6 +42,18 @@ public class TransactionService {
         List<TransactionDetail> det = tr.getTransactionDetail();
     return det;//detRepo.findAllById(det);
 
+    }
+
+    public boolean addTransaction(Transaction tr){
+        List<TransactionDetail> trdet = tr.getTransactionDetail();
+        tr.setTransactionDetail(null);
+        tranRepo.save(tr);
+        int id=tranRepo.getMaxId();
+        for (TransactionDetail det: trdet) {
+            det.setTransactionId(id);
+        }
+        detRepo.saveAll(trdet);
+        return true;
     }
 
 }

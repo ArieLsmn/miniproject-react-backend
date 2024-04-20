@@ -68,8 +68,14 @@ public class ProductService {
             return prodRepo.findById(id).get();
     }
 
-    public void insertProduct(Product p) {
-        prodRepo.save(p);
+    public boolean insertProduct(Product p) {
+        try {
+            prodRepo.save(p);
+        }catch (Exception e){
+            return false;
+        }
+
+        return true;
     }
 
 

@@ -20,37 +20,64 @@ public class ProductController {
     @Autowired
     private ProductService prodService;
 
-    @GetMapping(value="/listproduct",params = {"!sort_by","!sort_order","!title","!category_id"})
-    List<Product> listAll(){
-        return prodService.listProduct();
-    }
+    //@GetMapping(value="/listproduct",params = {"!sort_by","!sort_order","!title","!category_id"})
+    //List<Product> listAll(){
+    //    return prodService.listProduct();
+    //}
 
-    @GetMapping(value="/listproduct",params = {"sort_by","sort_order","!title"})
+    @GetMapping(value="/listproduct")
     @ResponseBody
-    List<Product> listByOrder(@RequestParam(name = "sort_by") String sortBy, @RequestParam(name="sort_order") String sortOrder){
+    ResponseEntity<Object> listByOrder(@RequestParam(name = "title",required = false) String name,
+                                       @RequestParam(name = "sort_by",required = false,defaultValue = "id") String sortBy,
+                                       @RequestParam(name="sort_order",required = false,defaultValue = "asc") String sortOrder,
+                                       @RequestParam(name = "category_id",required = false) String cat
+    ) {
+        if (!sortBy.matches("^[a-zA-Z]+$") || !sortOrder.matches("asc|desc"))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
 
-        return prodService.listProductSort(sortBy,sortOrder);
+
+        List < Product > pr = new ArrayList<>();
+
+
+        if (cat==null || cat.isEmpty()) {
+
+            if (name==null || name.isEmpty()) pr =prodService.listProductSort(sortBy, sortOrder);
+
+            else {
+                 if(!name.matches("^[a-zA-Z0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
+                pr = prodService.listProductLike(name, sortBy, sortOrder);
+
+            }
+        }else{
+
+            if(!cat.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
+            pr = prodService.listProductByCategory(Integer.parseInt(cat));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(pr);
     }
-    @GetMapping(value="/listproduct",params = {"title","sort_by","sort_order"})
-    @ResponseBody
-    List<Product> listByTitle(@RequestParam(name = "title") String name, @RequestParam(name = "sort_by") String sortBy, @RequestParam(name="sort_order") String sortOrder){
-
-        return prodService.listProductLike(name,sortBy,sortOrder);
-    }
 
 
-    @GetMapping(value="/listproduct",params = {"category_id"})
-    @ResponseBody
-    List<Product> listByCategory(@RequestParam(name = "category_id") int cat){
-        return prodService.listProductByCategory(cat);
-    }
+    //@GetMapping(value="/listproduct",params = {"category_id"})
+    //@ResponseBody
+    //List<Product> listByCategory(){
+    //    return prodService.listProductByCategory(cat);
+   // }
 
     @PostMapping("/addproduct")
     @ResponseBody
-    ResponseMessage addProduct(@RequestBody Product pr){
-        prodService.insertProduct(pr);
+    ResponseEntity<ResponseMessage> addProduct(@RequestBody Product pr){
+        HttpStatus stt;
+        ResponseMessage rm;
+        if(prodService.insertProduct(pr)) {
+            stt = HttpStatus.OK;
+            rm = new ResponseMessage(stt, "Success");
+        }else {
+            stt=HttpStatus.BAD_REQUEST;
+            rm = new ResponseMessage(stt,"Bad request");
+        }
 
-        return new ResponseMessage(HttpStatus.OK,"Success");
+            return ResponseEntity.status(stt).body(rm);
 
     }
 

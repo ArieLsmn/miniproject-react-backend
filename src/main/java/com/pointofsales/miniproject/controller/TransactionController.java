@@ -1,5 +1,6 @@
 package com.pointofsales.miniproject.controller;
 
+import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.model.entity.Transaction;
 import com.pointofsales.miniproject.model.entity.TransactionDetail;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequestMapping("pos/api")
@@ -19,13 +21,14 @@ public class TransactionController {
 
 
     @PostMapping("/addtransaction")
-    ResponseMessage addTransaction(@RequestBody TransactionDetail tr){
-
+    ResponseMessage addTransaction(@RequestBody Transaction tr){
+        tr.setTransactionDate(LocalDateTime.now());
+        tranServ.addTransaction(tr);
         return new ResponseMessage(HttpStatus.OK,"Success");
     }
 
     @GetMapping("/listtransaction")
-    List<Transaction> listTransaction(){
+    List<TransactionOnlyDto> listTransaction(){
 
        return tranServ.listTransaction();
 

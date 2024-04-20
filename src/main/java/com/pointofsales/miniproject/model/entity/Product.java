@@ -16,6 +16,7 @@ import java.io.Serializable;
 @Table(name = "products", schema = "public")
 public class Product implements Serializable {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private int id;
@@ -32,7 +33,7 @@ public class Product implements Serializable {
     private String image;
 
     public ProductDto entityToDto(){
-        return new ProductDto(this.title,this.image,this.price,this.category,this.id);
+        return new ProductDto(this.title,this.image,this.price,this.category.getId());
     }
 
 }

@@ -16,14 +16,22 @@ public class ProductDto {
     private String title;
     private String image;
     private int price;
-    private Category category;
-    //private int categoryId;
+    //private Category category;
+    private int categoryId;
     //private String categoryName;
-    private int id;
 
     Product dtoToEntity(){
 
-        Product p = new Product(this.id,this.title,this.category,this.price,this.image);
+        Product p = new Product();
+
+        p.setTitle(this.title);
+        p.setImage(this.image);
+        p.setPrice(this.price);
+
+        Category cat = new Category();
+        cat.setId(this.categoryId);
+
+        p.setCategory(cat);
 
         return p;
 

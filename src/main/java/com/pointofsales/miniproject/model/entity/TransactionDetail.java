@@ -18,7 +18,7 @@ public class TransactionDetail {
     @Id
     @Column(name = "id", nullable = false)
     private int id;
-    @Column(name = "transaction_id", nullable = false)
+    @Column(name = "transaction_id")
     private int transactionId;
     @Column(name = "product_id", nullable = false)
     private int productId;
