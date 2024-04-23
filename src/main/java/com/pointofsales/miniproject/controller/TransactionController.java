@@ -1,5 +1,6 @@
 package com.pointofsales.miniproject.controller;
 
+import com.pointofsales.miniproject.model.dto.TransactionDetailOnlyDto;
 import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.model.entity.Transaction;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("pos/api")
@@ -37,12 +39,17 @@ public class TransactionController {
 
     @GetMapping("/listtransactiondetail/{id}")
     ResponseEntity<Object> listTransactionDetail(@PathVariable("id") String id){
+        List<TransactionDetail> tr= new ArrayList<>();
 
-        if(!id.matches("^[0-9]+$"))
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+        try {
+            tr = tranServ.listTransactionDetail(Integer.parseInt(id));
+        }catch (NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+        }
+        //if(!id.matches("^[0-9]+$"))
+        //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
 
-        else
-        return ResponseEntity.status(HttpStatus.OK).body(tranServ.listTransactionDetail(Integer.parseInt(id)));
+        return ResponseEntity.status(HttpStatus.OK).body(tr);
 
     }
 
