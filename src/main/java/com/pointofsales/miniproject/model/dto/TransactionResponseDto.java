@@ -1,26 +1,22 @@
 package com.pointofsales.miniproject.model.dto;
 
-import com.pointofsales.miniproject.model.entity.Transaction;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionOnlyDto {
+public class TransactionResponseDto {
 
-
+    @JsonProperty("total_amount")
     private int totalAmount;
-
+    @JsonProperty("total_pay")
     private int totalPay;
-
+    @JsonProperty("transaction_date")
     private LocalDate transactionDate;
 
 

@@ -1,10 +1,11 @@
 package com.pointofsales.miniproject.controller;
 
-import com.pointofsales.miniproject.model.dto.TransactionDetailOnlyDto;
-import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
+import com.pointofsales.miniproject.model.dto.TransactionDetailRequestDto;
+import com.pointofsales.miniproject.model.dto.TransactionDetailResponseDto;
+import com.pointofsales.miniproject.model.dto.TransactionRequestDto;
+import com.pointofsales.miniproject.model.dto.TransactionResponseDto;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.model.entity.Transaction;
-import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import com.pointofsales.miniproject.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,14 +25,24 @@ public class TransactionController {
 
 
     @PostMapping("/addtransaction")
-    ResponseMessage addTransaction(@RequestBody Transaction tr){
-        tr.setTransactionDate(LocalDateTime.now());
-        tranServ.addTransaction(tr);
-        return new ResponseMessage(HttpStatus.OK,"Success");
+    ResponseEntity<ResponseMessage> addTransaction(@RequestBody TransactionRequestDto tr){
+
+        HttpStatus stt;
+        ResponseMessage rm;
+
+        if(tranServ.addTransaction(tr)) {
+            stt = HttpStatus.OK;
+            rm = new ResponseMessage(stt, "Success");
+        }else {
+            stt=HttpStatus.BAD_REQUEST;
+            rm = new ResponseMessage(stt,"Bad request");
+        }
+
+            return ResponseEntity.status(stt).body(rm);
     }
 
     @GetMapping("/listtransaction")
-    List<TransactionOnlyDto> listTransaction(){
+    List<TransactionResponseDto> listTransaction(){
 
        return tranServ.listTransaction();
 
@@ -39,7 +50,12 @@ public class TransactionController {
 
     @GetMapping("/listtransactiondetail/{id}")
     ResponseEntity<Object> listTransactionDetail(@PathVariable("id") String id){
-        List<TransactionDetail> tr= new ArrayList<>();
+
+        if(id.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cant be empty");
+        }
+
+        List<TransactionDetailResponseDto> tr= new ArrayList<>();
 
         try {
             tr = tranServ.listTransactionDetail(Integer.parseInt(id));

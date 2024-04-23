@@ -1,6 +1,9 @@
 package com.pointofsales.miniproject.service;
 
-import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
+import com.pointofsales.miniproject.model.dto.TransactionDetailRequestDto;
+import com.pointofsales.miniproject.model.dto.TransactionDetailResponseDto;
+import com.pointofsales.miniproject.model.dto.TransactionRequestDto;
+import com.pointofsales.miniproject.model.dto.TransactionResponseDto;
 import com.pointofsales.miniproject.model.entity.Transaction;
 import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import com.pointofsales.miniproject.repository.TransactionDetailsRepo;
@@ -24,10 +27,10 @@ public class TransactionService {
 
 
 
-    public List<TransactionOnlyDto> listTransaction(){
+    public List<TransactionResponseDto> listTransaction(){
 
         List<Transaction> tr = tranRepo.findAll();
-        List<TransactionOnlyDto> tro = new ArrayList<TransactionOnlyDto>();
+        List<TransactionResponseDto> tro = new ArrayList<TransactionResponseDto>();
         for (Transaction t : tr) {
             tro.add(t.entityToDto());
         }
@@ -36,18 +39,26 @@ public class TransactionService {
 
     }
 
-    public List<TransactionDetail> listTransactionDetail(int id){
+    public List<TransactionDetailResponseDto> listTransactionDetail(int id){
 
-        //List<Integer> ids = new ArrayList<Integer>();
-        //ids.add(id);
+
+        List<TransactionDetailResponseDto> trdto = new ArrayList<>();
         Transaction tr = new Transaction();
         Optional<Transaction> opTr = tranRepo.findById(id);
-        return opTr.map(Transaction::getTransactionDetail).orElse(null);
+        List<TransactionDetail> trd = opTr.map(Transaction::getTransactionDetail).orElse(null);
+
+        for(TransactionDetail x:trd){
+            trdto.add(x.entityToDtoOutput());
+        }
+
+        return trdto;
     //detRepo.findAllById(det);
 
     }
 
-    public boolean addTransaction(Transaction tr){
+    public boolean addTransaction(TransactionRequestDto trd){
+
+        Transaction tr = trd.dtoToEntity();
         List<TransactionDetail> trdet = tr.getTransactionDetail();
         tr.setTransactionDetail(null);
         tr.setTransactionDate(LocalDateTime.now());

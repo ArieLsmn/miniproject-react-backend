@@ -1,6 +1,7 @@
 package com.pointofsales.miniproject.model.entity;
 
-import com.pointofsales.miniproject.model.dto.TransactionOnlyDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pointofsales.miniproject.model.dto.TransactionResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,17 +24,17 @@ public class Transaction {
     //@JsonProperty("transaction_date")
     private LocalDateTime transactionDate;
     @Column(name = "total_amount", nullable = false)
-    //@JsonProperty("total_amount")
+
     private int totalAmount;
     @Column(name = "total_pay")
-    //@JsonProperty("total_amount")
+    @JsonProperty("total_amount")
     private int totalPay;
     @OneToMany
     @JoinColumn(name="transaction_id",referencedColumnName = "id")
     private List<TransactionDetail> transactionDetail;
 
-    public TransactionOnlyDto entityToDto(){
-        return new TransactionOnlyDto(this.totalAmount, this.totalPay, this.transactionDate.toLocalDate());
+    public TransactionResponseDto entityToDto(){
+        return new TransactionResponseDto(this.totalAmount, this.totalPay, this.transactionDate.toLocalDate());
     }
 
 

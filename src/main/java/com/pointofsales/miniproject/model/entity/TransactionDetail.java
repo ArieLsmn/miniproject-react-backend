@@ -1,9 +1,9 @@
 package com.pointofsales.miniproject.model.entity;
 
+import com.pointofsales.miniproject.model.dto.TransactionDetailRequestDto;
+import com.pointofsales.miniproject.model.dto.TransactionDetailResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Date;
 
 @Data
 @Getter
@@ -20,11 +20,19 @@ public class TransactionDetail {
     private int id;
     @Column(name = "transaction_id")
     private int transactionId;
-    @Column(name = "product_id", nullable = false)
-    private int productId;
+    @OneToOne
+    @JoinColumn (name="product_id",referencedColumnName="id")
+    private Product product;
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "subtotal")
     private int subtotal;
+
+    public TransactionDetailRequestDto entityToDtoInput(){
+        return new TransactionDetailRequestDto(this.product.getId(), this.quantity,this.subtotal);
+    }
+    public TransactionDetailResponseDto entityToDtoOutput(){
+        return new TransactionDetailResponseDto(this.transactionId,this.product.getId(),this.product.getTitle(), this.quantity,this.subtotal);
+    }
 
 }

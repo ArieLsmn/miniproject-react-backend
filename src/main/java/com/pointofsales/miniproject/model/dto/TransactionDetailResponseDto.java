@@ -1,8 +1,6 @@
 package com.pointofsales.miniproject.model.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Data
@@ -11,12 +9,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class TransactionDetailOnlyDto {
+public class TransactionDetailResponseDto {
 
+    @JsonProperty("transaction_id")
+    private int transactionId;
+    @JsonProperty("product_id")
     private int productId;
-
+    @JsonProperty("product_name")
+    private String productName;
+    @JsonProperty("quantity")
     private int quantity;
-
+    @JsonProperty("subtotal")
     private int subtotal;
 
     /*TransactionDetail dtoToEntity(int transactionId){
