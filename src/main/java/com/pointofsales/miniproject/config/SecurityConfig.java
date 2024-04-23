@@ -23,8 +23,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf()
                 .disable()
-                /*.authorizeHttpRequests()
-                .requestMatchers("pos/api/**")
+                .authorizeHttpRequests()
+                .requestMatchers("pos/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)*/;
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
