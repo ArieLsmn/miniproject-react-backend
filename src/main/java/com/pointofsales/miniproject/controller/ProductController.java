@@ -51,9 +51,13 @@ public class ProductController {
 
             }
         }else{
-
-            if(!cat.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
-            pr = prodService.listProductByCategory(Integer.parseInt(cat));
+            try {
+                //if (!cat.matches("^[0-9]+$"))
+                    //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+                pr = prodService.listProductByCategory(Integer.parseInt(cat));
+            }catch (NumberFormatException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
+            }
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(pr);

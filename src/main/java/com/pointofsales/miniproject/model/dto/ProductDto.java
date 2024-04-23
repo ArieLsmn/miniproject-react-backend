@@ -1,7 +1,10 @@
 package com.pointofsales.miniproject.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pointofsales.miniproject.model.entity.Category;
 import com.pointofsales.miniproject.model.entity.Product;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -13,11 +16,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductDto {
 
+    @Id
+    @GeneratedValue
     private int id;
     private String title;
     private String image;
     private int price;
     //private Category category;
+    @JsonProperty("category_id")
     private int categoryId;
     private String categoryName;
 
