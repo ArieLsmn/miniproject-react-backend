@@ -13,6 +13,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,49 +25,71 @@ public class ProductService {
     @Autowired
     CategoryRepo catRepo;
 
-    public List<Product> listProduct(){
+    public List<ProductDto> listProduct(){
         List<Product> listProd =prodRepo.findAll();
-        return listProd;
+        List<ProductDto> pdto = new ArrayList<ProductDto>();
+        for (Product p : listProd) {
+            pdto.add(p.entityToDto());
+        }
+
+        return pdto;
     }
 
-    public List<Product> listProductSort(String by, String dir){
+    public List<ProductDto> listProductSort(String by, String dir){
         List<Product> listProd;
         if(dir.equals("desc")) listProd =prodRepo.findAll(Sort.by(Sort.Order.desc(by)));
         else listProd =prodRepo.findAll(Sort.by(Sort.Order.asc(by)));
 
-        return listProd;
+        List<ProductDto> pdto = new ArrayList<ProductDto>();
+        for (Product p : listProd) {
+            pdto.add(p.entityToDto());
+        }
+
+        return pdto;
     }
 
-    public List<Product> listProductLike(String name, String by, String dir) {
-
-        Product p = new Product();
-        p.setTitle(name);
+    public List<ProductDto> listProductLike(String name, String by, String dir) {
+        List<Product> listProd;
+        Product pr = new Product();
+        pr.setTitle(name);
 
         //ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAll()
         //        .withMatcher(by, ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
-        Example<Product> example = Example.of(p,ExampleMatcher.matchingAll()
+        Example<Product> example = Example.of(pr,ExampleMatcher.matchingAll()
                 .withIgnoreCase().withIgnorePaths("id","price","categoryId")
                 .withMatcher(by,ExampleMatcher.GenericPropertyMatchers.contains()));
 
-        if(dir.equals("desc")) return prodRepo.findAll(example,Sort.by(Sort.Order.desc(by)));
+        if(dir.equals("desc")) listProd= prodRepo.findAll(example,Sort.by(Sort.Order.desc(by)));
         else
-        return prodRepo.findAll(example,Sort.by(Sort.Order.asc(by)));
+            listProd = prodRepo.findAll(example, Sort.by(Sort.Order.asc(by)));
+
+
+            List<ProductDto> pdto = new ArrayList<ProductDto>();
+            for (Product p : listProd) {
+                pdto.add(p.entityToDto());
+
+        }
+            return pdto;
     }
 
-    public List<Product> listProductByCategory(int cat) {
-
-        return prodRepo.findByCategoryId(cat);
+    public List<ProductDto> listProductByCategory(int cat) {
+        List<Product> listProd = prodRepo.findByCategoryId(cat);
+            List<ProductDto> pdto = new ArrayList<ProductDto>();
+            for (Product p : listProd) {
+                pdto.add(p.entityToDto());
+            }
+        return pdto;
     }
 
 
-    public Product detailProduct(int id) {
+    public ProductDto detailProduct(int id) {
         Optional<Product> optional = prodRepo.findById(id);
         if (optional.isEmpty()) {
             return null;
         }
         else
-            return prodRepo.findById(id).get();
+            return prodRepo.findById(id).get().entityToDto();
     }
 
     public boolean insertProduct(Product p) {

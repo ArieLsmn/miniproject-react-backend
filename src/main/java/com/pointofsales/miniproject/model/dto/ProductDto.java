@@ -16,16 +16,18 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductDto {
 
-    @Id
-    @GeneratedValue
-    private int id;
+
     private String title;
     private String image;
     private int price;
     //private Category category;
     @JsonProperty("category_id")
     private int categoryId;
+    @JsonProperty("category_name")
     private String categoryName;
+    @Id
+    @GeneratedValue
+    private int id;
 
     public Product dtoToEntity(){
 

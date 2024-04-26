@@ -38,7 +38,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
 
 
-        List < Product > pr = new ArrayList<>();
+        List <ProductDto> pr = new ArrayList<>();
 
 
         if (cat==null || cat.isEmpty()) {
@@ -117,16 +117,18 @@ public class ProductController {
 
         if (!id.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
 
-        Product pr = prodService.detailProduct(Integer.parseInt(id));
+        ProductDto pr;
 
-        ProductDto p;
+
         try {
-            p = pr.entityToDto();
+            pr = prodService.detailProduct(Integer.parseInt(id));
 
         }catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
+        }catch (NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(pr);
     }
 }
