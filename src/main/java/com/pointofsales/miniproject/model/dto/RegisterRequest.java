@@ -1,15 +1,13 @@
 package com.pointofsales.miniproject.model.dto;
 
 import com.pointofsales.miniproject.model.entity.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class RegisterRequest {
     private String username;
     private String password;

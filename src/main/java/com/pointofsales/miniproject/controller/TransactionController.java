@@ -30,25 +30,36 @@ public class TransactionController {
         HttpStatus stt;
         ResponseMessage rm;
 
-        if(tranServ.addTransaction(tr)) {
-            stt = HttpStatus.OK;
-            rm = new ResponseMessage(stt, "Success");
-        }else {
-            stt=HttpStatus.BAD_REQUEST;
-            rm = new ResponseMessage(stt,"Bad request");
+
+        try {
+            if (tranServ.addTransaction(tr)) {
+                stt = HttpStatus.OK;
+                rm = new ResponseMessage(stt, "Success");
+            } else {
+                stt = HttpStatus.BAD_REQUEST;
+                rm = new ResponseMessage(stt, "Bad request");
+            }
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+            if(e.getMessage().equals("TotalPayError")){
+            stt = HttpStatus.BAD_REQUEST;
+            rm = new ResponseMessage(stt, "Error Caught: Total pay cannot be less than amount");}
+            else{
+                stt = HttpStatus.BAD_REQUEST;
+                rm = new ResponseMessage(stt, "Error Caught: Quantity cannot be zero");}
         }
 
             return ResponseEntity.status(stt).body(rm);
     }
 
-    @GetMapping("/listtransaction")
+    @GetMapping("/listtransaksi")
     List<TransactionResponseDto> listTransaction(){
 
        return tranServ.listTransaction();
 
     }
 
-    @GetMapping("/listtransactiondetail/{id}")
+    @GetMapping("/listtransaksidetail/{id}")
     ResponseEntity<Object> listTransactionDetail(@PathVariable("id") String id){
 
         if(id.isEmpty()){

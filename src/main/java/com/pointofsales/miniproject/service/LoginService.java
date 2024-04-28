@@ -26,6 +26,12 @@ public class LoginService {
 
 
     public AuthenticationResponse register(RegisterRequest req){
+        /*String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        if(req.getUsername().matches(regexPattern)){
+        
+        }*/
+
         var user = User.builder()
                 .username(req.getUsername())
                 .password(passEnc.encode(req.getPassword()))

@@ -64,8 +64,8 @@ public class ProductService {
         else
             listProd = prodRepo.findAll(example, Sort.by(Sort.Order.asc(by)));
 
+        List<ProductDto> pdto = new ArrayList<ProductDto>();
 
-            List<ProductDto> pdto = new ArrayList<ProductDto>();
             for (Product p : listProd) {
                 pdto.add(p.entityToDto());
 
@@ -93,6 +93,9 @@ public class ProductService {
     }
 
     public boolean insertProduct(Product p) {
+
+        if(p.getPrice() == 0 || p.getTitle().isEmpty()) throw new IllegalArgumentException();
+
         try {
             prodRepo.save(p);
         }catch (Exception e){

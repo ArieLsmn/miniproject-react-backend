@@ -58,15 +58,21 @@ public class TransactionService {
 
     public boolean addTransaction(TransactionRequestDto trd){
 
+        if(trd.getTotalAmount()>trd.getTotalPay()) throw new IllegalArgumentException("TotalPayError");
+        //List<TransactionDetailRequestDto> trdr = trd.getTransactionDetail();
         Transaction tr = trd.dtoToEntity();
         List<TransactionDetail> trdet = tr.getTransactionDetail();
+        int id=tranRepo.getMaxId()+1;
+        for (TransactionDetail det: trdet) {
+            if(det.getQuantity()<=0) throw new IllegalArgumentException("QuantityError");
+            det.setTransactionId(id);
+        }
+
         tr.setTransactionDetail(null);
         tr.setTransactionDate(LocalDateTime.now());
         tranRepo.save(tr);
-        int id=tranRepo.getMaxId();
-        for (TransactionDetail det: trdet) {
-            det.setTransactionId(id);
-        }
+
+
         detRepo.saveAll(trdet);
         return true;
     }
