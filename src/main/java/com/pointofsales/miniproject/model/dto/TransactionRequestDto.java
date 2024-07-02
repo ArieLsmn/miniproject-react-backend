@@ -5,6 +5,8 @@ import com.pointofsales.miniproject.model.entity.Transaction;
 import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class TransactionRequestDto {
 
+    //@JsonProperty("transaction_date")
+    //private String transactionDate;
     @JsonProperty("total_amount")
     private int totalAmount;
     @JsonProperty("total_pay")
@@ -26,7 +30,7 @@ public class TransactionRequestDto {
         Transaction tr = new Transaction();
         tr.setTotalAmount(this.totalAmount);
         tr.setTotalPay(this.totalPay);
-
+        //tr.setTransactionDate(LocalDate.parse(this.transactionDate).atStartOfDay());
         List<TransactionDetail> trEnt = new ArrayList<TransactionDetail>();
         for(TransactionDetailRequestDto trd : this.transactionDetail)
             trEnt.add(trd.dtoToEntity());

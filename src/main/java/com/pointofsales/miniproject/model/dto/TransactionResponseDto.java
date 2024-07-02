@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TransactionResponseDto {
 
+    @JsonProperty("id")
+    private int id;
     @JsonProperty("total_amount")
     private int totalAmount;
     @JsonProperty("total_pay")

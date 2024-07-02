@@ -32,7 +32,7 @@ public class TransactionDetail {
         return new TransactionDetailRequestDto(this.product.getId(), this.quantity,this.subtotal);
     }
     public TransactionDetailResponseDto entityToDtoOutput(){
-        return new TransactionDetailResponseDto(this.transactionId,this.product.getId(),this.product.getTitle(), this.quantity,this.subtotal);
+        return new TransactionDetailResponseDto(this.id,this.transactionId,this.product.getId(),this.product.getTitle(), this.product.getPrice(), this.quantity,this.subtotal);
     }
 
 }

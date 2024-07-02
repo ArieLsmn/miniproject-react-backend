@@ -8,6 +8,7 @@ import com.pointofsales.miniproject.model.entity.Transaction;
 import com.pointofsales.miniproject.model.entity.TransactionDetail;
 import com.pointofsales.miniproject.repository.TransactionDetailsRepo;
 import com.pointofsales.miniproject.repository.TransactionRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,21 +57,29 @@ public class TransactionService {
 
     }
 
+    @Transactional
     public boolean addTransaction(TransactionRequestDto trd){
 
         if(trd.getTotalAmount()>trd.getTotalPay()) throw new IllegalArgumentException("TotalPayError");
         //List<TransactionDetailRequestDto> trdr = trd.getTransactionDetail();
+        System.out.println(trd);
         Transaction tr = trd.dtoToEntity();
+        tr.setTransactionDate(LocalDateTime.now());
+
         List<TransactionDetail> trdet = tr.getTransactionDetail();
+
         int id=tranRepo.getMaxId()+1;
+        tr.setId(id);
+        tranRepo.save(tr);
+
+
         for (TransactionDetail det: trdet) {
             if(det.getQuantity()<=0) throw new IllegalArgumentException("QuantityError");
             det.setTransactionId(id);
         }
 
         tr.setTransactionDetail(null);
-        tr.setTransactionDate(LocalDateTime.now());
-        tranRepo.save(tr);
+
 
 
         detRepo.saveAll(trdet);

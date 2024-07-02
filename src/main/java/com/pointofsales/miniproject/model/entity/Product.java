@@ -1,6 +1,7 @@
 package com.pointofsales.miniproject.model.entity;
 
 import com.pointofsales.miniproject.model.dto.ProductDto;
+import com.pointofsales.miniproject.model.dto.ProductDtoInput;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.access.method.P;
@@ -34,6 +35,9 @@ public class Product implements Serializable {
 
     public ProductDto entityToDto(){
         return new ProductDto(this.id,this.title,this.image,this.price,this.category.getId(),this.category.getName());
+    }
+    public ProductDtoInput entityToDtoInput(){
+        return new ProductDtoInput(this.id,this.title,this.image,this.price,this.category.getId(),this.category.getName());
     }
 
 }

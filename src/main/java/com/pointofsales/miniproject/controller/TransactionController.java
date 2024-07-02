@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("pos/api")
 @RestController
 public class TransactionController {
@@ -29,9 +30,10 @@ public class TransactionController {
 
         HttpStatus stt;
         ResponseMessage rm;
-
-
+        //System.out.println("test");
+        System.out.println(tr);
         try {
+
             if (tranServ.addTransaction(tr)) {
                 stt = HttpStatus.OK;
                 rm = new ResponseMessage(stt, "Success");
@@ -40,7 +42,7 @@ public class TransactionController {
                 rm = new ResponseMessage(stt, "Bad request");
             }
         }catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             if(e.getMessage().equals("TotalPayError")){
             stt = HttpStatus.BAD_REQUEST;
             rm = new ResponseMessage(stt, "Error Caught: Total pay cannot be less than amount");}

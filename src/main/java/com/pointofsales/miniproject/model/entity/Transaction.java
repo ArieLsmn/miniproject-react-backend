@@ -16,7 +16,7 @@ import java.util.List;
 @Entity(name = "transactions")
 @Table(name = "transactions", schema = "public")
 public class Transaction {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private int id;
@@ -34,7 +34,7 @@ public class Transaction {
     private List<TransactionDetail> transactionDetail;
 
     public TransactionResponseDto entityToDto(){
-        return new TransactionResponseDto(this.totalAmount, this.totalPay, this.transactionDate.toLocalDate());
+        return new TransactionResponseDto(this.id,this.totalAmount, this.totalPay, this.transactionDate.toLocalDate());
     }
 
 

@@ -26,16 +26,16 @@ public class LoginService {
 
 
     public AuthenticationResponse register(RegisterRequest req){
-        /*String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-        if(req.getUsername().matches(regexPattern)){
-        
-        }*/
+        if(!req.getUsername().matches(regexPattern)){
+            throw new IllegalArgumentException();
+        }
 
         var user = User.builder()
                 .username(req.getUsername())
                 .password(passEnc.encode(req.getPassword()))
-                .role(Role.USER)
+                .role(req.getRole()) //test
                 .build();
         userRepo.save(user);
         var jwtToken = jwtServ.generateToken(user);
@@ -44,7 +44,11 @@ public class LoginService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest req){
-
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        if(!req.getUsername().matches(regexPattern)){
+            throw new IllegalArgumentException();
+        }
         authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 req.getUsername(),req.getPassword()
         ));

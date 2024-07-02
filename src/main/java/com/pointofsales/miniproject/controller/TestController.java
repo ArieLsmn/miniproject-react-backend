@@ -1,35 +1,31 @@
 package com.pointofsales.miniproject.controller;
 
 import com.pointofsales.miniproject.model.dto.ProductDto;
-import com.pointofsales.miniproject.model.dto.ProductDtoInput;
-import com.pointofsales.miniproject.model.entity.Category;
-import com.pointofsales.miniproject.model.entity.Product;
+import com.pointofsales.miniproject.model.entity.Electronic;
 import com.pointofsales.miniproject.model.entity.ResponseMessage;
 import com.pointofsales.miniproject.service.ProductService;
+import com.pointofsales.miniproject.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("pos/api")
+@RequestMapping("api/")
 @RestController
-public class ProductController {
+public class TestController {
 
     @Autowired
-    private ProductService prodService;
+    private TestService prodService;
 
     //@GetMapping(value="/listproduct",params = {"!sort_by","!sort_order","!title","!category_id"})
     //List<Product> listAll(){
     //    return prodService.listProduct();
     //}
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping(value="/listproduct")
     @ResponseBody
     ResponseEntity<Object> listByOrder(@RequestParam(name = "title",required = false) String name,
@@ -41,7 +37,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
 
 
-        List <ProductDto> pr = new ArrayList<>();
+        List <Electronic> pr = new ArrayList<>();
 
 
         if (cat==null || cat.isEmpty()) {
@@ -49,7 +45,7 @@ public class ProductController {
             if (name==null || name.isEmpty()) pr =prodService.listProductSort(sortBy, sortOrder);
 
             else {
-                 if(!name.matches("^[a-zA-Z0-9 ]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
+                 if(!name.matches("^[a-zA-Z0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Option Input");
                 pr = prodService.listProductLike(name, sortBy, sortOrder);
 
             }
@@ -73,12 +69,13 @@ public class ProductController {
     //    return prodService.listProductByCategory(cat);
    // }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/addproduct")
     @ResponseBody
-    ResponseEntity<ResponseMessage> addProduct(@RequestBody ProductDtoInput pr){
+    ResponseEntity<ResponseMessage> addProduct(@RequestBody Electronic pr){
         HttpStatus stt;
         ResponseMessage rm;
-        if(prodService.insertProduct(pr.dtoToEntity())) {
+        if(prodService.insertProduct(pr)) {
             stt = HttpStatus.OK;
             rm = new ResponseMessage(stt, "Success");
         }else {
@@ -90,9 +87,11 @@ public class ProductController {
 
     }
 
+
+    @CrossOrigin(origins = "http://localhost:5173")
     @PutMapping("/updateproduct/{id}")
     @ResponseBody
-    ResponseMessage updateProduct(@PathVariable("id") String id, @RequestBody ProductDto pr){
+    ResponseMessage updateProduct(@PathVariable("id") String id, @RequestBody Electronic pr){
         if (!id.matches("^[0-9]+$")) return new ResponseMessage(HttpStatus.BAD_REQUEST,"Only numbers allowed");
 
         boolean check = prodService.updateProduct(Integer.parseInt(id), pr);
@@ -103,33 +102,27 @@ public class ProductController {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/deleteproduct/{id}")
     @ResponseBody
     ResponseMessage deleteProduct(@PathVariable("id") String id){
         if (!id.matches("^[0-9]+$")) return new ResponseMessage(HttpStatus.BAD_REQUEST,"Only numbers allowed");
-
-        try{
         boolean check=prodService.deleteProduct(Integer.parseInt(id));
-
         if(check)
         return new ResponseMessage(HttpStatus.OK,"Success");
 
         else return new ResponseMessage(HttpStatus.NOT_FOUND, "Data not found");
 
-
-        }catch(DataIntegrityViolationException e){
-            return new ResponseMessage(HttpStatus.FORBIDDEN, "Data cant be deleted");
-
     }
-    }
-
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/detailproduct/{id}")
     @ResponseBody
     ResponseEntity<Object> detailProduct(@PathVariable("id") String id){
 
         if (!id.matches("^[0-9]+$")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only numbers allowed");
 
-        ProductDto pr;
+        Electronic pr;
+
 
         try {
             pr = prodService.detailProduct(Integer.parseInt(id));

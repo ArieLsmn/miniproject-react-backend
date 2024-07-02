@@ -53,16 +53,25 @@ public class ProductService {
         Product pr = new Product();
         pr.setTitle(name);
 
+        //System.out.println(pr);
         //ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAll()
         //        .withMatcher(by, ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withMatcher("title", new ExampleMatcher.GenericPropertyMatcher().contains().ignoreCase()).withIgnorePaths("id","price","categoryId","image","category_id","category");
 
-        Example<Product> example = Example.of(pr,ExampleMatcher.matchingAll()
-                .withIgnoreCase().withIgnorePaths("id","price","categoryId")
-                .withMatcher(by,ExampleMatcher.GenericPropertyMatchers.contains()));
+        /*Example<Product> example = Example.of(pr,ExampleMatcher.matchingAll()
+                .withIgnoreCase().withIgnorePaths("id","price","categoryId","image","category_id","category")
+                .withMatcher(by,ExampleMatcher.GenericPropertyMatchers.contains()));*/
+        Example<Product> example =Example.of(pr,matcher);
+
+        System.out.println(example);
 
         if(dir.equals("desc")) listProd= prodRepo.findAll(example,Sort.by(Sort.Order.desc(by)));
-        else
-            listProd = prodRepo.findAll(example, Sort.by(Sort.Order.asc(by)));
+
+        else listProd = prodRepo.findAll(example , Sort.by(Sort.Order.asc(by)));
+        //else listProd =prodRepo.searchByTitleLike(name);
+
+        System.out.println(listProd);
 
         List<ProductDto> pdto = new ArrayList<ProductDto>();
 
@@ -125,10 +134,23 @@ public class ProductService {
             return false;
         }
         else {
-            prodRepo.deleteById(id);
+            try {
+                prodRepo.deleteById(id);
+            }catch(Exception e){
+                throw(e);
+            }
             return true;
         }
 
+    }
+
+    public int prodCountByCat(int id) {
+        Optional<Product> optional = prodRepo.findById(id);
+        if (optional.isEmpty()) {
+            return 0;
+        }
+        else
+            return prodRepo.countByCategoryId(id);
     }
 
 

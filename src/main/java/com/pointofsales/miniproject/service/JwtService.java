@@ -20,7 +20,7 @@ public class JwtService {
     private static final String SECRET_KEY="9a10bb5caab4a29ec6c56066bbec557fc750d597446e023ead7bba81c25889bc";
 
     public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis()+1000*60*30)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis()+1000*60*5)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);

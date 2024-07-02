@@ -11,12 +11,16 @@ import lombok.*;
 
 public class TransactionDetailResponseDto {
 
+    @JsonProperty("id")
+    private int id;
     @JsonProperty("transaction_id")
     private int transactionId;
     @JsonProperty("product_id")
     private int productId;
     @JsonProperty("product_name")
     private String productName;
+    @JsonProperty("product_price")
+    private int productPrice;
     @JsonProperty("quantity")
     private int quantity;
     @JsonProperty("subtotal")

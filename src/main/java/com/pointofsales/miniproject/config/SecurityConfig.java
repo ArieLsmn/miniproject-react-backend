@@ -1,6 +1,5 @@
 package com.pointofsales.miniproject.config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtFilter;
+
     private final AuthenticationProvider authProvider;
 
     @Bean
@@ -24,7 +24,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("pos/auth/**","pos/api/listproduct/**","pos/api/listtransactiondetail/**")
+                .requestMatchers("pos/auth/**","pos/api/**","api/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
